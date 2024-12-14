@@ -29,9 +29,8 @@ const verifyJWT = (req, res, next) => {
 
 // MONGO DB ROUTES
 
-const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@yoga-master.ajwox.mongodb.net/?retryWrites=true&w=majority&appName=yoga-master`;
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@yogaweb.pwc0k.mongodb.net/?retryWrites=true&w=majority&appName=yogaweb`;
 
-// Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
     serverApi: {
         version: ServerApiVersion.v1,
@@ -43,7 +42,7 @@ const client = new MongoClient(uri, {
 async function run() {
     try {
         // Connect the client to the server	(optional starting in v4.7)
-        const database = client.db("music_cons");
+        const database = client.db("yoga-web");
         const userCollection = database.collection("users");
         const classesCollection = database.collection("classes");
         const cartCollection = database.collection("cart");
@@ -151,6 +150,8 @@ async function run() {
             res.send(result);
         });
 
+        
+
         // GET ALL CLASSES ADDED BY INSTRUCTOR
         app.get('/classes/:email', verifyJWT, verifyInstructor, async (req, res) => {
             const email = req.params.email;
@@ -232,12 +233,14 @@ async function run() {
         })
         // ! CART ROUTES
 
-        // ADD TO CART
+        //ADD TO CART
         app.post('/add-to-cart', verifyJWT, async (req, res) => {
             const newCartItem = req.body;
             const result = await cartCollection.insertOne(newCartItem);
             res.send(result);
         })
+
+       
         // Get cart item id for checking if a class is already in cart
         app.get('/cart-item/:id', verifyJWT, async (req, res) => {
             const id = req.params.id;
@@ -355,6 +358,11 @@ async function run() {
                     }
                 },
                 {
+                    $match: {
+                        "instructor.role": "instructor"
+                    }
+                },
+                {
                     $project: {
                         _id: 0,
                         instructor: {
@@ -369,7 +377,7 @@ async function run() {
                     }
                 },
                 {
-                    $limit: 6
+                    $limit:6
                 }
             ]
             const result = await classesCollection.aggregate(pipeline).toArray();

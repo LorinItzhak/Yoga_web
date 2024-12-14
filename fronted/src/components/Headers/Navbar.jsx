@@ -6,7 +6,7 @@ import { dark } from '@mui/material/styles/createPalette';
 import Switch from '@mui/material/Switch';
  import photoURL from '../../assets/home/girl.jpg';
 import{FaBars} from 'react-icons/fa';
-
+import {motion} from 'framer-motion';
 
 const navLinks = [
   { name: 'Home', route: '/' },
@@ -89,22 +89,26 @@ const handleLogout = () => {
 }
 
   return (
-    <nav className="">
+    <motion.nav
+    initial={{opacity: 0}}
+    animate={{opacity: 1}}
+    transition={{duration:0.5}}
+     className={`${isHome ? navBg : "bg-white dark:bg-black backdrop-blur-2xl"} ${isFixed? 'static' : 'fixed'} top-0 transition-colors duration-500 ease-in-out w-full z-10 `}>
       <div className="lg:w-[95%] mx-auto sm:px-6 lg:px-6">
         <div className="px-4 py-4 flex items-center justify-between">
 
           {/* Logo */}
-          <div>
-            <h1 className="text-2xl inline-flex gap-3 items-center font-bold">
+          <div onClick={ ()=> navigate('/ ')} className='flex-shrink-0 cursor-pointer pl-7 md:p-0 flex items-center '>
+            <div> <h1 className="text-2xl inline-flex gap-3 items-center font-bold">
               YogaMaster
               <img src="/yoga-logo.png" alt="" className="w-8 h-8" />
             </h1>
-            <p className="font-bold text-[13px] tracking-[8px]">Quick Explore</p>
+            <p className="font-bold text-[13px] tracking-[8px]">Quick Explore</p></div>
           </div>
           {/* Mobile menu icons */}
 
           <div className='md:hidden flex items-center'>
-            <button onClick={toggleMobileMenu} className='text-grey-300 hover:text-white focus:outline-none'>
+            <button type="button " onClick={toggleMobileMenu} className='text-grey-300 hover:text-white focus:outline-none'>
               <FaBars className='h-6 w-6 hover:text-primary'/>
             </button>
           </div>
@@ -116,6 +120,7 @@ const handleLogout = () => {
                   <li key={link.route}>
                     <NavLink
                       to={link.route}
+                      style={{whiteSpace:"nowrap "}}
                       className={({ isActive }) =>
                         `font-bold ${
                           isActive
@@ -206,7 +211,7 @@ const handleLogout = () => {
           </div>
         </div>
       </div>
-    </nav>
+    </motion.nav>
   );
 };
 
