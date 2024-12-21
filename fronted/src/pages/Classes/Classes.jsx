@@ -4,22 +4,91 @@ import useAxiosFetch from '../../hooks/useAxiosFetch';
 import Card from '../Home/PopularClasses/card';
 import { Transition } from '@headlessui/react';
 import { Link } from 'react-router-dom';
+import { use } from 'react';
+import { useContext } from 'react';
+import useUser from '../../hooks/useUser';
+import useAxiosSecure from '../../hooks/useAxiosSeciure';
+import Instructors from '../Instructors/Instructors';
+import { AuthContext } from '../../ultilities/providers/AuthProvider';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import {toast, ToastContainer} from 'react-toastify';
 
 
 const Classes = () => {
   const axiosFetch = useAxiosFetch();
+  const axiosSecure = useAxiosSecure(); 
   const [hoveredCard, setHoveredCard] = useState(null);
   const [classes, setClasses] = useState([]);
+  const {currentUser}= useUser();
+  const role = currentUser?.role;
+  const[enrolledClasses, setEnrolledClasses] = useState([]);
+
+// const {user} =useContext(AuthContext);
+// console.log("the current user is", user);
+
 
   const handleHover = (index) => {
     setHoveredCard(index);
-  }
+  };
   useEffect(() => {
-           axiosFetch.get('/classes').then(res => setClasses(res.data)).catch(err => console.log(err));
+           axiosFetch
+           .get('/classes')
+           .then(res => setClasses(res.data))
+           .catch(err => console.log(err));
               
   }, []);
   
-console.log(classes);
+//handle add to cart
+const handleSelect = (id) => {
+  
+axiosSecure.get(`/enrolled-classes/${currentUser?.email}`)
+.then(res => setEnrolledClasses(res.data)).catch(err => console.log(err));
+
+
+ if (!currentUser) {
+ return toast.error('Please Login First!');
+   }
+
+axiosSecure.get(`/cart-item /${id}?email=${currentUser?.email}`)
+.then(res => {
+  if(res.data.clasId === id){
+    return toast.error('Already Selected');
+  }
+  else if(enrolledClasses.find(item=>item.classes._id===id)){
+    return toast.error('Already Enrolled');
+  }  
+  else {
+   const data = {
+    userMail: currentUser.email,
+    clasId: id, 
+    data: new Date()
+  }
+  toast.promise(axiosSecure.post('/add-to-cart', data))
+  .then(res => {
+    console.log(res.data);
+  }),
+  {
+    pending: 'Selecting...',
+    success: {
+      render({data}) {
+        return "Successfully selected";
+    }},
+    error: {
+      render({data}) {
+        return `Error: ${data.message}`;
+      }
+    }
+  }
+
+
+  }
+})
+}
+
+// console.log(classes);
+
+
 return (
   <div>
   <div className='mt-20 pt-3'>
@@ -50,8 +119,14 @@ return (
               leaveTo="opacity-0"
             >
               <div className='absolute inset-0 flex items-center justify-center'>
-                <button className='px-4 py-2 text-white disabled:bg-red-300 bg-secondary duration-300
-                rounded hover:bg-red-700 '>Add to cart</button>
+                <button onClick={()=> handleSelect(cls._id)} title={role =='admin' ||
+                 role==='instructor' ? 'Instructors/Admin can not be able to select' ? cls.availableSeats <1
+                  : 'No seat avaliable' : "You can select classes"}
+                  disabled={role ==='admin' || role==='instructor' || cls.availableSeats <1}
+
+
+                   className='px-4 py-2 text-white disabled:bg-red-300 bg-secondary duration-300
+                rounded hover:bg-red-700'> Add to cart</button>
               </div>
               </Transition>
             </div>

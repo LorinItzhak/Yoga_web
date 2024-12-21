@@ -94,7 +94,7 @@ import axios from 'axios';
     const unsubscribe = auth. onAuthStateChanged(user => {
       setUser(user);
       if(user){
-        axios.post('http://localhost:3000//api/set-token',{email: user.email,name: user.displayName})
+        axios.post('http://localhost:3000/api/set-token',{email: user.email,name: user.displayName})
         .then((data) => {
           if(data.data.token){
             localStorage.setItem('token', data.data.token)
@@ -116,7 +116,7 @@ import axios from 'axios';
 
 
 
-    const contextValue = {user, signUp, login, logout, updateUser, googleLogin,error,setError}
+    const contextValue = {user, signUp, login, logout, updateUser, googleLogin,error,setError,Loader,setLoader}
       
    return (
      <AuthContext.Provider value={contextValue}>

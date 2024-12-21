@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom';
 
 const card = ({item}) => {
-  console.log(item);
+
       const{_id,name,image,availableSeats,price,totalEnrolled}=item;
       
   return (

@@ -3,8 +3,10 @@ import HeroContainer from './Hero/HeroContainer'
 import Gallery from './Gallery/Gallery'
 import PopularClasses from './PopularClasses/PopularClasses'
 import PopularTeacher from './PopularTeacher/PopularTeacher'
+import  useAuth  from '../../hooks/useAuth'
 
 const Home = () => {
+  
   return (
     <section>
       <HeroContainer/>

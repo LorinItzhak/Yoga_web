@@ -10,14 +10,16 @@ import {
 import 'react-toastify/dist/ReactToastify.css';
 import Aos from 'aos';
 import { router } from './routes/router';
+import AuthProvier from './ultilities/providers/AuthProvider';
  
 const queryClient = new QueryClient() 
 
 Aos.init();
 ReactDOM.createRoot(document.getElementById('root')).render(
-  
+    <AuthProvier>
       <QueryClientProvider client={queryClient}>
         <RouterProvider router={router } />
       </QueryClientProvider>
+      </AuthProvier>
     
 )

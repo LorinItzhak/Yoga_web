@@ -5,12 +5,12 @@ import { initializeApp } from "firebase/app";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyD9IMbowV0sCKaqrZKTW0FS_SIqN1nMXGM",
-  authDomain: "yogaweb-eeaf0.firebaseapp.com",
-  projectId: "yogaweb-eeaf0",
-  storageBucket: "yogaweb-eeaf0.firebasestorage.app",
-  messagingSenderId: "811322883891",
-  appId: "1:811322883891:web:0abd9a139b5f4628b9c846"
+  apiKey: import.meta.env.VITE_APIKEY,
+  authDomain: import.meta.env.VITE_AUTHDOMAIN,
+  projectId: import.meta.env.VITE_PROJECTID,
+  storageBucket: import.meta.env.VITE_STORAGEBUCKET,
+  messagingSenderId: import.meta.env.VITE_MESSAGINGSENDERID,
+  appId: import.meta.env.VITE_APPID
 };
 
 // Initialize Firebase
