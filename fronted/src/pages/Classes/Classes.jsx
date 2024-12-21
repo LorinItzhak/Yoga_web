@@ -16,21 +16,21 @@ import {toast, ToastContainer} from 'react-toastify';
 
 
 const Classes = () => {
-  const axiosFetch = useAxiosFetch();
-  const axiosSecure = useAxiosSecure(); 
   const [hoveredCard, setHoveredCard] = useState(null);
-  const [classes, setClasses] = useState([]);
   const {currentUser}= useUser();
+  console.log(currentUser);
   const role = currentUser?.role;
   const[enrolledClasses, setEnrolledClasses] = useState([]);
-
-// const {user} =useContext(AuthContext);
-// console.log("the current user is", user);
-
 
   const handleHover = (index) => {
     setHoveredCard(index);
   };
+
+
+  const [classes, setClasses] = useState([]);
+  const axiosFetch = useAxiosFetch();
+  const axiosSecure = useAxiosSecure(); 
+ 
   useEffect(() => {
            axiosFetch
            .get('/classes')
@@ -47,44 +47,93 @@ axiosSecure.get(`/enrolled-classes/${currentUser?.email}`)
 
 
  if (!currentUser) {
- return toast.error('Please Login First!');
+ return alert('Please Login First!');
    }
-
-axiosSecure.get(`/cart-item /${id}?email=${currentUser?.email}`)
+   axiosSecure.get(`/cart-item/${id}?email=${currentUser?.email}`)
 .then(res => {
-  if(res.data.clasId === id){
-    return toast.error('Already Selected');
+  if(res.data.classId === id){
+    return alert('Already Selected');
   }
   else if(enrolledClasses.find(item=>item.classes._id===id)){
-    return toast.error('Already Enrolled');
+    return alert('Already Enrolled');
   }  
   else {
    const data = {
     userMail: currentUser.email,
-    clasId: id, 
+    classId: id, 
     data: new Date()
   }
-  toast.promise(axiosSecure.post('/add-to-cart', data))
+  axiosSecure.post('/add-to-cart', data)
   .then(res => {
+    alert('added to cart');
     console.log(res.data);
-  }),
-  {
-    pending: 'Selecting...',
-    success: {
-      render({data}) {
-        return "Successfully selected";
-    }},
-    error: {
-      render({data}) {
-        return `Error: ${data.message}`;
-      }
-    }
-  }
+
+    
+  })
+  // ,{
+  //   pending: 'Selecting...',
+  //   success: {
+  //     render({data}) {
+  //       return "Successfully selected";
+  //   }},
+  //   error: {
+  //     render({data}) {
+  //       return `Error: ${data.message}`;
+  //     }
+  //   }
+  // }
 
 
   }
 })
 }
+
+// const handleSelect = (id) => {
+
+//   if (!currentUser) {
+//     alert('Please login first');
+//     return navigate('/login');
+//   }
+
+   
+//   axiosSecure.get(`/enrolled-classes/${currentUser?.email}`)
+//     .then(res => {
+//       const currentEnrolledClasses = res.data; 
+
+    
+//       const isAlreadyEnrolled = currentEnrolledClasses.some(item => item.classes._id === id);
+
+//       if (isAlreadyEnrolled) {
+//         alert('Already enrolled');
+//         return; 
+//       }
+
+      
+//       axiosSecure.get(`/cart-item/${id}?email=${currentUser?.email}`)
+//         .then(res => {
+//           if (res.data.classId === id) {
+//             alert('Already selected');
+//           } else if (currentEnrolledClasses.find(item => item.classes._id === id)) {
+//             alert('Already enrolled');
+//           } else {
+//             const data = {
+//               classId: id,
+//               userMail: currentUser?.email,
+//               date: new Date()
+//             };
+           
+//             axiosSecure.post('/add-to-cart', data)
+//               .then(res => {
+//                 alert('Added to cart');
+               
+//                 setEnrolledClasses(prevState => [...prevState, res.data]);
+//               })
+//               .catch(err => console.log(err));
+//           }
+//         });
+//     })
+//     .catch(err => console.log(err));
+// }
 
 // console.log(classes);
 

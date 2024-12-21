@@ -24,6 +24,7 @@ const Login = () => {
     // console.log(formData);
     login(formData.email, formData.password)
     .then((res) => {
+      alert('Login successful!');
       navigate(location?.state?.from ||  '/dashboard');
     })
     .catch(err => {
