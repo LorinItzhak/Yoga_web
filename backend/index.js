@@ -51,6 +51,8 @@ async function run() {
         const appliedCollection = database.collection("applied");
         client.connect();
 
+
+
         // Verify admin
         const verifyAdmin = async (req, res, next) => {
             const email = req.decoded.email;
@@ -142,6 +144,7 @@ async function run() {
 
         // ! CLASSES ROUTES
 
+        
 
         app.post('/new-class', verifyJWT, verifyInstructor, async (req, res) => {
             const newClass = req.body;
@@ -406,6 +409,16 @@ async function run() {
             res.send(result);
 
         })
+
+        // GET related courses
+app.get('/related-courses', async (req, res) => {
+    try {
+        const relatedCourses = await classesCollection.find({ status: 'approved' }).limit(5).toArray();
+        res.send(relatedCourses);
+    } catch (error) {
+        res.status(500).send({ error: 'Failed to fetch related courses' });
+    }
+});
 
         // !GET ALL INSTrUCTOR  
 

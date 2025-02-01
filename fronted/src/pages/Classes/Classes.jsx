@@ -18,7 +18,7 @@ import {toast, ToastContainer} from 'react-toastify';
 const Classes = () => {
   const [hoveredCard, setHoveredCard] = useState(null);
   const {currentUser}= useUser();
-  console.log(currentUser);
+  // console.log(currentUser);
   const role = currentUser?.role;
   const[enrolledClasses, setEnrolledClasses] = useState([]);
 
@@ -66,7 +66,7 @@ axiosSecure.get(`/enrolled-classes/${currentUser?.email}`)
   axiosSecure.post('/add-to-cart', data)
   .then(res => {
     alert('added to cart');
-    console.log(res.data);
+    // console.log(res.data);
 
     
   })
@@ -144,7 +144,7 @@ return (
     <h1 className='text-4xl font-bold text-center text-secondary '>Classes</h1>
   </div>
 
-    <div className='my-16 w-[90%] mx-auto grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8'>
+    <div className='my-16 w-[90%] mx-auto grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8'>
       {
         classes.map((cls,index) => (
           <div
