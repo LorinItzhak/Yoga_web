@@ -18,6 +18,54 @@ const SingleClass = () => {
   const axiosFetch = useAxiosFetch();
   const axiosSecure = useAxiosSecure();
 
+  const handleSelect = (id) => {
+  
+    axiosSecure.get(`/enrolled-classes/${currentUser?.email}`)
+    .then(res => setEnrolledClasses(res.data)).catch(err => console.log(err));
+    
+    
+     if (!currentUser) {
+     return alert('Please Login First!');
+       }
+       axiosSecure.get(`/cart-item/${id}?email=${currentUser?.email}`)
+    .then(res => {
+      if(res.data.classId === id){
+        return alert('Already Selected');
+      }
+      else if(enrolledClasses.find(item=>item.classes._id===id)){
+        return alert('Already Enrolled');
+      }  
+      else {
+       const data = {
+        userMail: currentUser.email,
+        classId: id, 
+        data: new Date()
+      }
+      axiosSecure.post('/add-to-cart', data)
+      .then(res => {
+        alert('added to cart');
+        // console.log(res.data);
+    
+        
+      })
+      // ,{
+      //   pending: 'Selecting...',
+      //   success: {
+      //     render({data}) {
+      //       return "Successfully selected";
+      //   }},
+      //   error: {
+      //     render({data}) {
+      //       return `Error: ${data.message}`;
+      //     }
+      //   }
+      // }
+    
+    
+      }
+    })
+    }
+
   // Fetch related courses (דוגמה איך למשוך נתונים דינמיים)
   React.useEffect(() => {
     const fetchRelatedCourses = async () => {
@@ -36,7 +84,7 @@ const SingleClass = () => {
       >
       {/* Breadcrumb/Header */}
       <div
-        className=" breadcrumbs bg-purple-500 py-20 mt-20 section-padding bg-cover bg-center bg-no-repeat"
+        className=" breadcrumbs bg-blue-300 py-20 mt-20 section-padding bg-cover bg-center bg-no-repeat"
         // style={{ backgroundImage: `url(${course.image || 'https://via.placeholder.com/800x400'})` }}
       >
         <div className="container text-center">
@@ -331,7 +379,7 @@ const SingleClass = () => {
 
                         <div className="text-black font-semibold">Enrolled</div>
                       </div>
-                      <div className="flex-none">2K</div>
+                      <div className="flex-none">{course.totalEnrolled}</div>
                     </li>
                     <li className="flex space-x-3 border-b border-[#ECECEC] mb-4 pb-4 last:pb-0 past:mb-0 last:border-0">
                       <div className="flex-1 space-x-3 flex items-center">
