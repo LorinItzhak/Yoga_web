@@ -21,7 +21,7 @@ const StudentCP = () => {
     
   return (
     
-    <div className='h-screen flex justify-center items-center p-2'>
+    <div className='h-screen flex justify-center items-center p-2 ml-64'>
         
         <div>
         {/* <button onClick={notify}>Notify!</button> */}

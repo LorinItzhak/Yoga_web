@@ -9,7 +9,7 @@ const Dashboard = () => {
     const role = currentUser?.role;
 
     if(isLoading){  
-        return <div className='flex justify-center items-center h-screen'><HashLoader  color="#FF1949 "  size={50} /></div>
+        return <div className='flex justify-center items-center h-screen '><HashLoader  color="#FF1949 "  size={50} /></div>
     }
 
   return (

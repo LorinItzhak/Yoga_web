@@ -23,7 +23,10 @@ import { Link } from "react-router-dom";
 import { Outlet } from "react-router-dom";
 import Scroll from "../hooks/useScroll";
 import { HashLoader } from "react-spinners";
+
 import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 
 const notify = () => toast("Wow so easy!");
     
@@ -131,30 +134,52 @@ const lastMenuItems = [
   },
 ];
 
+// const openPageInToast = (path) => {
+//   const toastId = toast.info(
+//     <iframe
+//       src={path}
+//       title="Content"
+//       style={{
+//         width: "100%",
+//         height: "400px",
+//         border: "none",
+//         animation: "slideIn 0.5s ease-out", // אפקט סלייד
+//       }}
+//     />,
+//     {
+//       position: "top-left",
+//       autoClose: false,
+//       hideProgressBar: true,
+//       closeOnClick: false,
+//       draggable: false,
+//       closeButton: true,
+//       className:" flex justify-center items-center h-screen",
+//       style: {
+//         // flex ,justify-center, items-center ,h-screen
+//         minWidth: "500px",
+//         maxBlockSize:"h-screen",
+//         marginLeft: "80%",
+//         maxWidth: "600px",
+//         borderRadius: "8px",
+//         boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
+//         overflow: "hidden",
+//       },
+//       onClose: () => {
+//         const toastElement = document.querySelector(".Toastify__toast");
+//         if (toastElement) {
+//           toastElement.style.animation = "slideOut 0.5s ease-in"; // אפקט יציאה
+//         }
+//       },
+//     }
+//   );
 
-const openPageInToast = (path) => {
-    toast.info(
-      <iframe
-        src={path}
-        title="Content"
-        style={{ width: "100%", height: "400px", border: "none" }}
-      />,
-      {
-        position: "top-right",
-        autoClose: false,
-        hideProgressBar: true,
-        closeOnClick: false,
-        draggable: false,
-        closeButton: true,
-        style: {
-          minWidth: "500px",
-          maxWidth: "600px",
-          borderRadius: "8px",
-          boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
-        },
-      }
-    );
-  };
+//   // סגירה אוטומטית אחרי 5 שניות (אופציונלי)
+//   // setTimeout(() => {
+//   //   toast.dismiss(toastId);
+//   // }, 5000);
+// };
+
+
 
 const DashboardLayout = () => {
   const [open, setOpen] = useState(true);
@@ -224,6 +249,7 @@ const DashboardLayout = () => {
               Yoga Master
             </h1>
           </Link>
+          
         </div>
 
         {/* Navlinks */}
@@ -239,6 +265,7 @@ const DashboardLayout = () => {
               adminNavItems.map((menuItem, index) => (
                 <li key={index} className="mb-2">
                   <NavLink
+                  
                     to={menuItem.to}
                     className={({ isActive }) =>
                       `flex ${
@@ -303,6 +330,7 @@ const DashboardLayout = () => {
               students.map((menuItem, index) => (
                 <li key={index} className="mb-2">
                   <NavLink
+                  onClick={() => openPageInToast(menuItem.to)}
                     to={menuItem.to}
                    
                     className={({ isActive }) =>
@@ -310,6 +338,7 @@ const DashboardLayout = () => {
                         isActive ? "bg-red-500 text-white" : "text-[#413F4F]"
                       } duration-150 rounded-md p-2 cursor-pointer hover:bg-secondary hover:text-white font-bold text-sm items-center gap-x-4`
                     }
+                    
                   >
                     {menuItem.icon}
                     <span
@@ -367,6 +396,8 @@ const DashboardLayout = () => {
       <div>
         <Scroll/>
         <Outlet/>
+        {/* <ToastContainer /> */}
+
       </div>
     </div>
   );

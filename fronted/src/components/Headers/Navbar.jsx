@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { NavLink } from 'react-router-dom';
 import { ThemeProvider, THEME_ID, createTheme } from '@mui/material/styles';
@@ -7,6 +7,11 @@ import Switch from '@mui/material/Switch';
  import photoURL from '../../assets/home/girl.jpg';
 import{FaBars} from 'react-icons/fa';
 import {motion} from 'framer-motion';
+import { AuthContext } from '../../ultilities/providers/AuthProvider';
+import Swal from 'sweetalert2';
+
+
+
 
 const navLinks = [
   { name: 'Home', route: '/' },
@@ -36,7 +41,10 @@ const Navbar = () => {
   const[scrollPosition, setScrollPosition] = useState(0);
   const[isFixed, setIsFixed] = useState(false);
   const[isDarkMode, setIsDarkMode] = useState(false);
-  const user = true;
+
+
+  // const user = true;
+  const {logout, user} = useContext(AuthContext);
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -84,9 +92,37 @@ const Navbar = () => {
   }
 }, [scrollPosition]);
 
-const handleLogout = () => {
-  console.log('logout');
-}
+
+
+
+  const handleLogout = () => {
+    // logout();
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, Logout Me!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        logout()
+          .then(
+            Swal.fire({
+              title: "Logout successfull!",
+              // text: "Your file has been deleted.",
+              icon: "success",
+            })
+          )
+          .catch((error) => {
+            console.log(error);
+          });
+      }
+      navigate("/");
+    });
+  };
+
 
   return (
     <motion.nav
