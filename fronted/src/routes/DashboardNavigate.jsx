@@ -11,7 +11,7 @@ const DashboardNavigate = () => {
     }
    
             if (role === 'admin') return <Navigate to="/dashboard/admin-home" replace/>
-            if (role === 'instructor') return <Navigate to="/dashboard/instructor-pc" replace />
+            if (role === 'instructor') return <Navigate to="/dashboard/instructor-cp" replace />
             if (role === 'user') return <Navigate to="/dashboard/student-cp" replace/>
     
 }

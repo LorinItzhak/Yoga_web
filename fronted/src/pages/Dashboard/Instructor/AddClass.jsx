@@ -74,11 +74,11 @@ const AddClass = () => {
  
 
   return (
-    <div>
-      <div className="my-10">
+    <div className=" w-fit-content mx-auto p-4">
+      <div className="my-10 ">
         <h1 className=" text-center text-3xl font-bold ">Add Your Class</h1>
       </div>
-      <form onSubmit={handleSubmit} className="mx-auto  bg-white p-6 rounded shadow">
+      <form onSubmit={handleSubmit} className="mx-auto  w-[80vw] bg-white p-6 rounded shadow">
         <div className="grid grid-cols-2 w-full gap-3 items-center">
           <div className="mb-6">
             <label
