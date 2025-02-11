@@ -133,7 +133,7 @@ async function run() {
                     address: updatedUser.address,
                     phone: updatedUser.phone,
                     about: updatedUser.about,
-                    photoUrl: updatedUser.photoUrl,
+                    photoURL: updatedUser.photoURL,
                     skills: updatedUser.skills ? updatedUser.skills : null,
                 }
             }

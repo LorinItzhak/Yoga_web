@@ -1,11 +1,8 @@
-import React from 'react'
+import React from "react";
+import MyClasses from "./MyClasses";
 
 const ApprovedClasses = () => {
-  return (
-    <div>
-      
-    </div>
-  )
-}
+  return <MyClasses statusFilter="approved" />;
+};
 
-export default ApprovedClasses
+export default ApprovedClasses;

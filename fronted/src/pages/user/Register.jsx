@@ -18,7 +18,7 @@ const Register = () => {
         signUp(data.email, data.password).then((res) => {
             const user = res.user;
             if(user){
-                return updateUser(data.name, data.photoUrl).then(() => {
+                return updateUser(data.name, data.photoURL).then(() => {
                     const userImp={
                         name: user?.displayName,
                         email: user?.email,
@@ -119,11 +119,11 @@ const Register = () => {
                    
                 </div>
                 <div className='mb-4'>
-                    <label htmlFor='photoUrl' className='block text-gray-700 font-bold mb-2'>
+                    <label htmlFor='photoURL' className='block text-gray-700 font-bold mb-2'>
                         <AiOutlinePicture className='inline-block mr-2 mb-1  text-lg'/>
                         Photo URL
                         </label>
-                    <input type='photo URL'  placeholder='photo URL' {...register('photoUrl')}
+                    <input type='photo URL'  placeholder='photo URL' {...register('photoURL')}
                      className='w-full border focus:outline-none rounded-md border-gray-300 py-2 px-4 
                      focus:ring focus:border-blue-300'/>
                    

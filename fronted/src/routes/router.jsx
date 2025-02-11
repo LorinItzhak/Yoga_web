@@ -18,10 +18,11 @@ import AddClass from "../pages/Dashboard/Instructor/AddClass";
 import MyClasses from "../pages/Dashboard/Instructor/MyClasses";
 import PendingClasses from "../pages/Dashboard/Instructor/PendingClasses";
 import ApprovedClasses from "../pages/Dashboard/Instructor/ApprovedClasses";
-import EnrolledClass from "../pages/Dashboard/Student/EnrolledClass";
+import EnrolledClass from "../pages/Dashboard/Student/Enroll/EnrolledClass";
 import MySelected from "../pages/Dashboard/Student/MySelected";
 import MyPayments from "../pages/Dashboard/Student/MyPayments";
 import ApplyInstructor from "../pages/Dashboard/Student/ApplyInstructor";
+import UpdateUser from "../pages/Dashboard/Admin/UpdateUser";
 import { ToastContainer } from "react-toastify";
 
 export const router = createBrowserRouter([
@@ -78,6 +79,11 @@ export const router = createBrowserRouter([
       {
         path: "manage-applications",
         element: <ManageApplications />,
+      },
+      {
+        path: "update-user/:id", 
+        element: <UpdateUser />,
+        loader:  ({params}) => fetch (`http://localhost:3000/users/${params.id}`),
       },
 
       // Instructor routes

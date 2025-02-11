@@ -1,77 +1,156 @@
 import React from "react";
-
-const selectedClasses = []; // נתונים מדומים - ניתן להחליף בנתונים אמיתיים
+import useUser from "../../../hooks/useUser";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import useAxiosSecure from "../../../hooks/useAxiosSeciure";
+import { useEffect } from "react";
+import moment from "moment";
+import { MdDeleteSweep } from "react-icons/md";
+import { FiDollarSign } from "react-icons/fi";
+import Swal from "sweetalert2";
 
 const MySelected = () => {
-  const subtotal = selectedClasses.reduce((acc, cls) => acc + cls.price, 0);
-  const taxes = subtotal * 0.1; // מס 10%
-  const extraFees = 0;
-  const total = subtotal + taxes + extraFees;
+  const { currentUser } = useUser();
+  const [loading, setLoading] = useState(true);
+  const [classes, setClasses] = useState([]);
+  const [paginationData, setPaginationData] = useState([]);
+  const [page, setPage] = useState(1);
+  const itemsPerPage = 5;
+  const totalPage = Math.ceil(classes.length / itemsPerPage);
+  const navigate = useNavigate();
+  const axiosSecure = useAxiosSecure();
+
+  useEffect(() => {
+    axiosSecure
+      .get(`/cart/${currentUser?.email}`)
+      .then((res) => {
+        setClasses(res.data);
+        // setPaginationData(res.data.slice(0,itemsPerPage));
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        setLoading(false);
+      });
+  }, []);
+
+  const handleDelete = (id) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, Delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const res = axiosSecure.Delete(`/delete-cart-item/${id}`, {
+          status: "Delete",
+          reason: "Deleted",
+        });
+        if (result.data.deletedCount > 0) {
+          Swal.fire({
+            title: "Deleted!",
+            text: "Your Class has been Deleted",
+            icon: "success",
+          });
+          const newClasses = classes.filter((item) => item._id !== id);
+          setClasses(newClasses);
+        }
+      }
+    });
+  };
+  
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
-    <div className="flex gap-10">
-    <div className="flex flex-col items-center h-screen mt-9 ml-72 ">
-      <h1 className="text-2xl font-bold mb-6">
-        My <span className="text-blue-600">Selected</span> Class
-      </h1>
+    <div className="">
+      <div className="my-6 text-center">
+        <h1 className=" text-4xl font-bold ">
+          My <span className="text-secondary">Selected</span> Classes{" "}
+        </h1>
+      </div>
 
-      <div className="flex flex-col md:flex-row p-9 ">
-        {/* טבלת מוצרים */}
-        <div className=" flex-1 bg-white border border-gray-300 rounded-md shadow-md p-8 space-y-4">
-          <h2 className="text-lg font-semibold mb-2">Shopping Cart:</h2>
-          <table className=" text-center border-collapse w-max-auto">
-            <thead className="bg-gray-100">
-              <tr>
-                <th className="border p-4">#</th>
-                <th className="border p-4">Product</th>
-                <th className="border p-4">Price</th>
-                <th className="border p-4">Date</th>
-                <th className="border p-4">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {selectedClasses.length === 0 ? (
-                <tr>
-                  <td colSpan="5" className="border p-8 w-48 text-gray-500">
-                    No Classes Found
-                  </td>
-                </tr>
-              ) : (
-                selectedClasses.map((cls, index) => (
-                  <tr key={cls._id}>
-                    <td className="border p-2">{index + 1}</td>
-                    <td className="border p-2">{cls.name}</td>
-                    <td className="border p-2">${cls.price}</td>
-                    <td className="border p-2">{cls.date}</td>
-                    <td className="border p-2">
-                      <button className="bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600">
-                        Remove
-                      </button>
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
+      <div className="h-screen py-8">
+        <div className="container mx-auto px-4">
+          <h2 className="text-2xl font-semibold mb-4">Shopping Cart : </h2>
+          <div className="flex flex-col md:flex-row gap-4">
+            {/* left */}
+            <div className="md:w-3/4">
+              <div className="bg-white rounded-lg shadow-md p-6 mb-4">
+                <table className="w-full">
+                  <thead>
+                    <tr>
+                      <th className="text-left font-semibold">#</th>
+                      <th className="text-left font-semibold">Product</th>
+                      <th className="text-left font-semibold">Price</th>
+                      <th className="text-left font-semibold">Date</th>
+                      <th className="text-left font-semibold">Actions</th>
+                    </tr>
+                  </thead>
+                  {/* table body */}
+                  <tbody>
+                    {classes.length === 0 ? (
+                      <tr>
+                        <td
+                          colSpan="5"
+                          className="text-center text-2xl font-bold"
+                        >
+                          No Classes Founded
+                        </td>
+                      </tr>
+                    ) : (
+                      classes.map((item, index) => {
+                        const letIndex = (page - 1) * itemsPerPage + index + 1;
+                        return (
+                          <tr key={item._id}>
+                            <td className="py-4">{letIndex}</td>
+                            <td className="py-4">
+                              <div className="flex items-center">
+                                <img
+                                  src={item.image}
+                                  alt=""
+                                  className="h-16 w-16 mr-4"
+                                />
+                                <span>{item.name}</span>
+                              </div>
+                            </td>
+                            <td className="py-4">${item.price}</td>
+                            <td className="py-4">
+                              <p className="text-gray-700 text-sm">
+                                {moment(item.submitted).format("MMMM Do YYYY")}
+                              </p>
+                            </td>
+                            <td className="py-4 flex pt-8 gap-2">
+                              <button
+                                onClick={() => handleDelete(item._id)}
+                                className="px-3 py-1 cursor-pointer bg-red-500 rounded-3xl text-white font-bold "
+                              >
+                                <MdDeleteSweep />
+                              </button>
+                              <button className="px-3 py-1 cursor-pointer bg-green-500 rounded-3xl text-white font-bold flex items-center">
+                                <FiDollarSign className="mr-2" />
+                              </button>
+                            </td>
+                          </tr>
+                        );
+                      })
+                    )}
+                  </tbody>
+                </table>
               </div>
-              </div>
-        {/* סיכום */}
-        <div className="flex flex-col h-full mt-32 w-full  bg-white border border-gray-300 p-8 rounded-md shadow-md">
-          <h2 className="text-xl font-semibold mb-4 text-center">Summary</h2>
-          <div className="space-y-2 text-sm">
-            <p>Subtotal: <strong>${subtotal.toFixed(2)}</strong></p>
-            <p>Taxes: <strong>${taxes.toFixed(2)}</strong></p>
-            <p>Extra Fees: <strong>${extraFees.toFixed(2)}</strong></p>
-            <hr />
-            <p className="font-bold text-lg">Total: ${total.toFixed(2)}</p>
+            </div>
+
+            {/* right */}
+            <div className="md:w-1/5 fixed right-3">right</div>
           </div>
-          <button className="w-full h-full bg-blue-600 text-white py-2 mt-4 rounded-md hover:bg-blue-700 transition">
-            Checkout
-          </button>
         </div>
-      
-              </div>
+      </div>
+    </div>
   );
 };
 
